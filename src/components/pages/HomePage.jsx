@@ -96,6 +96,10 @@ function HomePage() {
         <StatCard label="Tracked Bets" value={String(filteredBets.length)} change="Visible" tone="neutral" />
       </section>
 
+      <section className="mb-8">
+        <ProfessionalAnalytics bets={filteredBets} />
+      </section>
+
       <section className="mt-8 grid gap-6 xl:grid-cols-[1.1fr_1.4fr]">
         <AddBetForm onSubmit={handleAddBet} />
 
