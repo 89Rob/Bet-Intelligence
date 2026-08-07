@@ -1,20 +1,49 @@
+import { useLocation } from 'react-router-dom'
 import Button from '../ui/Button'
 
-function TopBar() {
+function TopBar({ theme, toggleTheme, onToggleMenu }) {
+  const location = useLocation()
+
+  const titleMap = {
+    '/': 'Dashboard',
+    '/dashboard': 'Dashboard',
+    '/bets': 'Bets',
+    '/analytics': 'Analytics',
+    '/settings': 'Settings',
+  }
+
+  const currentTitle = titleMap[location.pathname] || 'Dashboard'
+
   return (
-    <header className="border-b border-slate-200 bg-white/90 backdrop-blur-sm">
+    <header className="sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--header-bg)]/90 backdrop-blur-sm">
       <div className="flex items-center justify-between gap-4 px-4 py-4 md:px-6">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
-            Dashboard
-          </p>
-          <h1 className="text-lg font-semibold text-slate-900">Overview</h1>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={onToggleMenu}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--panel)] text-lg text-[var(--text)] transition hover:bg-[var(--panel-muted)] md:hidden"
+            aria-label="Toggle navigation"
+          >
+            ☰
+          </button>
+
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--muted)]">
+              Overview
+            </p>
+            <h1 className="text-lg font-semibold text-[var(--text)]">{currentTitle}</h1>
+          </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <Button variant="secondary" size="sm">
-            Export
-          </Button>
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-sm font-medium text-[var(--text)] transition hover:bg-[var(--panel-muted)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+          >
+            <span aria-hidden="true">{theme === 'light' ? '🌙' : '☀️'}</span>
+            {theme === 'light' ? 'Dark mode' : 'Light mode'}
+          </button>
           <Button size="sm">New View</Button>
         </div>
       </div>
