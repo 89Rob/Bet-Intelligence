@@ -5,17 +5,19 @@ const navItems = [
   { label: 'Bets', to: '/bets' },
   { label: 'Analytics', to: '/analytics' },
   { label: 'Settings', to: '/settings' },
+  { label: 'Help', to: '/help' },
 ]
 
 function Navigation({ onNavigate }) {
   return (
-    <nav className="space-y-2">
+    <nav className="space-y-2" aria-label="Primary navigation">
       {navItems.map((item) => (
         <NavLink
           key={item.label}
           to={item.to}
           end={item.to === '/'}
           onClick={onNavigate}
+          aria-label={item.label}
           className={({ isActive }) =>
             [
               'flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 ease-out hover:-translate-y-0.5',

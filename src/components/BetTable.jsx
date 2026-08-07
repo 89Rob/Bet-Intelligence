@@ -16,7 +16,12 @@ function BetTable({ bets }) {
     return (
       <Card className="p-8">
         <div className="flex flex-col items-center justify-center text-center">
-          <div className="mb-3 text-4xl">🔎</div>
+          <svg viewBox="0 0 64 64" aria-hidden="true" className="mb-4 h-16 w-16 text-indigo-500">
+            <circle cx="28" cy="28" r="18" fill="none" stroke="currentColor" strokeWidth="3" />
+            <path d="M40 40l14 14" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+            <path d="M24 20l8 8" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+            <circle cx="24" cy="24" r="2" fill="currentColor" />
+          </svg>
           <h3 className="text-lg font-semibold text-slate-900">No bets match your filters</h3>
           <p className="mt-2 max-w-md text-sm text-slate-500">
             Try clearing your search or changing the sport and result filters to see more betting records.

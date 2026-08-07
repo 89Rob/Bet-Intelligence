@@ -69,20 +69,18 @@ function AddBetForm({ onSubmit }) {
   }
 
   return (
-    <Card className="p-6 shadow-sm transition-shadow duration-200 hover:shadow-md">
+    <Card id="add-bet-form" className="p-6 shadow-sm transition-shadow duration-200 hover:shadow-md">
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-[var(--text)]">Add Bet</h2>
         <p className="mt-1 text-sm text-[var(--muted)]">Record a new football bet for tracking.</p>
       </div>
 
-      <form className="space-y-5" onSubmit={handleSubmit}>
+      <form className="space-y-5" onSubmit={handleSubmit} aria-label="Add a new bet">
         <div className="grid gap-4 md:grid-cols-2">
           <label className="flex flex-col gap-1.5 text-sm font-medium text-[var(--text)]">
             Date
             <input
-              type="date"
-              name="date"
-              value={formData.date}
+            aria-label="Bet date"
               onChange={handleChange}
               className="rounded-xl border border-[var(--border)] bg-[var(--panel)] px-3 py-2.5 text-[var(--text)] outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
             />
@@ -91,6 +89,7 @@ function AddBetForm({ onSubmit }) {
           <label className="flex flex-col gap-1.5 text-sm font-medium text-[var(--text)]">
             Sport
             <input
+              aria-label="Sport"
               type="text"
               name="sport"
               value={formData.sport}
@@ -104,6 +103,7 @@ function AddBetForm({ onSubmit }) {
           <label className="flex flex-col gap-1.5 text-sm font-medium text-[var(--text)] md:col-span-2">
             Event
             <input
+              aria-label="Event name"
               type="text"
               name="event"
               value={formData.event}
@@ -117,6 +117,7 @@ function AddBetForm({ onSubmit }) {
           <label className="flex flex-col gap-1.5 text-sm font-medium text-[var(--text)]">
             Market
             <input
+              aria-label="Market"
               type="text"
               name="market"
               value={formData.market}
@@ -130,6 +131,7 @@ function AddBetForm({ onSubmit }) {
           <label className="flex flex-col gap-1.5 text-sm font-medium text-[var(--text)]">
             Selection
             <input
+              aria-label="Selection"
               type="text"
               name="selection"
               value={formData.selection}
@@ -143,6 +145,7 @@ function AddBetForm({ onSubmit }) {
           <label className="flex flex-col gap-1.5 text-sm font-medium text-[var(--text)]">
             Bookmaker
             <input
+              aria-label="Bookmaker"
               type="text"
               name="bookmaker"
               value={formData.bookmaker}
@@ -156,6 +159,7 @@ function AddBetForm({ onSubmit }) {
           <label className="flex flex-col gap-1.5 text-sm font-medium text-[var(--text)]">
             Stake (£)
             <input
+              aria-label="Stake in pounds"
               type="number"
               name="stake"
               min="0"
@@ -170,6 +174,7 @@ function AddBetForm({ onSubmit }) {
           <label className="flex flex-col gap-1.5 text-sm font-medium text-[var(--text)]">
             Odds
             <input
+              aria-label="Odds"
               type="number"
               name="odds"
               min="1"
@@ -184,6 +189,7 @@ function AddBetForm({ onSubmit }) {
           <label className="flex flex-col gap-1.5 text-sm font-medium text-[var(--text)] md:col-span-2">
             Result
             <select
+              aria-label="Bet result"
               name="result"
               value={formData.result}
               onChange={handleChange}
@@ -200,6 +206,7 @@ function AddBetForm({ onSubmit }) {
         <label className="flex flex-col gap-1.5 text-sm font-medium text-[var(--text)]">
           Notes
           <textarea
+            aria-label="Notes"
             name="notes"
             value={formData.notes}
             onChange={handleChange}

@@ -29,6 +29,7 @@ function DashboardLayout({ theme, toggleTheme }) {
         <button
           type="button"
           aria-label="Close navigation"
+          data-mobile-overlay="true"
           onClick={() => setMobileMenuOpen(false)}
           className="fixed inset-0 z-30 bg-slate-950/50 md:hidden"
         />
