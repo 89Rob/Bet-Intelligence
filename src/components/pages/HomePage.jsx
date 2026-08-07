@@ -1,13 +1,69 @@
+import Button from '../ui/Button'
+import Card from '../ui/Card'
+import PageHeader from '../ui/PageHeader'
+import StatCard from '../ui/StatCard'
+import DashboardLayout from '../layout/DashboardLayout'
+
 function HomePage() {
   return (
-    <section className="rounded-xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
-      <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-        Welcome to Bet Intelligence
-      </h1>
-      <p className="mt-4 text-slate-600">
-        This project shell is ready for future betting features.
-      </p>
-    </section>
+    <DashboardLayout>
+      <PageHeader
+        eyebrow="Operations"
+        title="Welcome back"
+        description="Overview of your betting activity and upcoming opportunities."
+        actions={
+          <>
+            <Button variant="secondary" size="sm">
+              Filters
+            </Button>
+            <Button size="sm">Create report</Button>
+          </>
+        }
+      />
+
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <StatCard label="Games Today" value="0" change="Live" tone="indigo" />
+        <StatCard label="Tracked Bets" value="0" change="Latest" tone="neutral" />
+        <StatCard label="Win Rate" value="--" change="N/A" tone="success" />
+        <StatCard label="Profit" value="$0.00" change="+0.00%" tone="warning" />
+      </section>
+
+      <section className="mt-8 grid gap-6 xl:grid-cols-[1.4fr_1fr]">
+        <Card className="p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-slate-900">Recent Activity</h2>
+            <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+              Placeholder
+            </span>
+          </div>
+          <div className="space-y-4">
+            <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm text-slate-500">
+              No recent activity yet.
+            </div>
+            <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm text-slate-500">
+              Upcoming insights will appear here.
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-slate-900">Upcoming Matches</h2>
+            <span className="rounded-full bg-indigo-100 px-2.5 py-1 text-xs font-medium text-indigo-700">
+              Soon
+            </span>
+          </div>
+          <div className="space-y-4">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-500">
+              No games scheduled.
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-500">
+              Match listings will be added later.
+            </div>
+          </div>
+        </Card>
+      </section>
+    </DashboardLayout>
   )
 }
 
