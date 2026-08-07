@@ -7,6 +7,18 @@ import DashboardLayout from '../layout/DashboardLayout'
 import BetTable from '../BetTable'
 import AddBetForm from '../forms/AddBetForm'
 import { calculateBetProfit, mockBets } from '../../data/bets'
+import {
+  calculateAverageOdds,
+  calculateAverageStake,
+  calculateLosingBets,
+  calculatePendingBets,
+  calculateRoi,
+  calculateSportPerformance,
+  calculateTotalProfit,
+  calculateTotalStaked,
+  calculateWinRate,
+  calculateWinningBets,
+} from '../../lib/analytics'
 
 function HomePage() {
   const [bets, setBets] = useState(mockBets)
@@ -27,11 +39,16 @@ function HomePage() {
     return matchesSearch && matchesSport && matchesResult
   })
 
-  const totalProfit = filteredBets.reduce((sum, bet) => sum + Number(bet.profit || 0), 0)
-  const settledBets = filteredBets.filter((bet) => bet.result === 'Won' || bet.result === 'Lost')
-  const winRate = settledBets.length
-    ? (filteredBets.filter((bet) => bet.result === 'Won').length / settledBets.length) * 100
-    : 0
+  const totalStaked = calculateTotalStaked(filteredBets)
+  const totalProfit = calculateTotalProfit(filteredBets)
+  const roi = calculateRoi(totalProfit, totalStaked)
+  const averageStake = calculateAverageStake(totalStaked, filteredBets.length)
+  const averageOdds = calculateAverageOdds(filteredBets)
+  const winRate = calculateWinRate(filteredBets)
+  const winningBets = calculateWinningBets(filteredBets)
+  const losingBets = calculateLosingBets(filteredBets)
+  const pendingBets = calculatePendingBets(filteredBets)
+  const { best: bestSport, worst: worstSport } = calculateSportPerformance(filteredBets)
 
   const handleAddBet = (newBet) => {
     const betToAdd = {
@@ -58,11 +75,25 @@ function HomePage() {
         }
       />
 
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Games Today" value="0" change="Live" tone="indigo" />
-        <StatCard label="Tracked Bets" value={String(filteredBets.length)} change="Latest" tone="neutral" />
+      <section className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <StatCard label="Total Staked" value={`£${totalStaked.toFixed(2)}`} change="All bets" tone="indigo" />
+        <StatCard label="Total Profit" value={`£${totalProfit.toFixed(2)}`} change="Net" tone="warning" />
+        <StatCard label="ROI" value={`${roi.toFixed(1)}%`} change="Profit / stake" tone="success" />
+        <StatCard label="Average Stake" value={`£${averageStake.toFixed(2)}`} change="Per bet" tone="neutral" />
+      </section>
+
+      <section className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <StatCard label="Average Odds" value={averageOdds.toFixed(2)} change="Decimal" tone="indigo" />
         <StatCard label="Win Rate" value={`${winRate.toFixed(1)}%`} change="Settled" tone="success" />
-        <StatCard label="Profit" value={`£${totalProfit.toFixed(2)}`} change="Total" tone="warning" />
+        <StatCard label="Winning Bets" value={String(winningBets)} change="Won" tone="success" />
+        <StatCard label="Losing Bets" value={String(losingBets)} change="Lost" tone="warning" />
+      </section>
+
+      <section className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <StatCard label="Pending Bets" value={String(pendingBets)} change="Open" tone="neutral" />
+        <StatCard label="Best Sport" value={bestSport} change="Highest profit" tone="indigo" />
+        <StatCard label="Worst Sport" value={worstSport} change="Lowest profit" tone="warning" />
+        <StatCard label="Tracked Bets" value={String(filteredBets.length)} change="Visible" tone="neutral" />
       </section>
 
       <section className="mt-8 grid gap-6 xl:grid-cols-[1.1fr_1.4fr]">
