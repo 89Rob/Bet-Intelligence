@@ -13,6 +13,18 @@ export const betTemplate = {
   notes: '',
 }
 
+export function calculateBetProfit({ stake, odds, result }) {
+  if (result === 'Won') {
+    return Number((stake * (odds - 1)).toFixed(2))
+  }
+
+  if (result === 'Lost') {
+    return Number((-stake).toFixed(2))
+  }
+
+  return 0
+}
+
 export const mockBets = [
   {
     id: 'BET-1001',
