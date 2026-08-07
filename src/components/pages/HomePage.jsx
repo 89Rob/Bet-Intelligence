@@ -10,10 +10,28 @@ import { calculateBetProfit, mockBets } from '../../data/bets'
 
 function HomePage() {
   const [bets, setBets] = useState(mockBets)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [sportFilter, setSportFilter] = useState('All')
+  const [resultFilter, setResultFilter] = useState('All')
 
-  const totalProfit = bets.reduce((sum, bet) => sum + Number(bet.profit || 0), 0)
-  const settledBets = bets.filter((bet) => bet.result === 'Won' || bet.result === 'Lost')
-  const winRate = settledBets.length ? (bets.filter((bet) => bet.result === 'Won').length / settledBets.length) * 100 : 0
+  const sports = ['All', ...new Set(bets.map((bet) => bet.sport).filter(Boolean))]
+
+  const filteredBets = bets.filter((bet) => {
+    const combinedText = [bet.event, bet.selection, bet.bookmaker, bet.market]
+      .join(' ')
+      .toLowerCase()
+    const matchesSearch = !searchTerm || combinedText.includes(searchTerm.toLowerCase())
+    const matchesSport = sportFilter === 'All' || bet.sport === sportFilter
+    const matchesResult = resultFilter === 'All' || bet.result === resultFilter
+
+    return matchesSearch && matchesSport && matchesResult
+  })
+
+  const totalProfit = filteredBets.reduce((sum, bet) => sum + Number(bet.profit || 0), 0)
+  const settledBets = filteredBets.filter((bet) => bet.result === 'Won' || bet.result === 'Lost')
+  const winRate = settledBets.length
+    ? (filteredBets.filter((bet) => bet.result === 'Won').length / settledBets.length) * 100
+    : 0
 
   const handleAddBet = (newBet) => {
     const betToAdd = {
@@ -42,7 +60,7 @@ function HomePage() {
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Games Today" value="0" change="Live" tone="indigo" />
-        <StatCard label="Tracked Bets" value={String(bets.length)} change="Latest" tone="neutral" />
+        <StatCard label="Tracked Bets" value={String(filteredBets.length)} change="Latest" tone="neutral" />
         <StatCard label="Win Rate" value={`${winRate.toFixed(1)}%`} change="Settled" tone="success" />
         <StatCard label="Profit" value={`£${totalProfit.toFixed(2)}`} change="Total" tone="warning" />
       </section>
@@ -57,10 +75,58 @@ function HomePage() {
               <p className="text-sm text-slate-500">Recent football bets tracked in the system.</p>
             </div>
             <span className="rounded-full bg-indigo-100 px-2.5 py-1 text-xs font-medium text-indigo-700">
-              {bets.length} bets
+              {filteredBets.length} bets
             </span>
           </div>
-          <BetTable bets={bets} />
+
+          <Card className="mb-4 p-4">
+            <div className="space-y-4">
+              <label className="block text-sm font-medium text-slate-700">
+                Search
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(event) => setSearchTerm(event.target.value)}
+                  placeholder="Search event, selection, bookmaker or market"
+                  className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                />
+              </label>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <label className="block text-sm font-medium text-slate-700">
+                  Sport
+                  <select
+                    value={sportFilter}
+                    onChange={(event) => setSportFilter(event.target.value)}
+                    className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                  >
+                    {sports.map((sport) => (
+                      <option key={sport} value={sport}>
+                        {sport}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="block text-sm font-medium text-slate-700">
+                  Result
+                  <select
+                    value={resultFilter}
+                    onChange={(event) => setResultFilter(event.target.value)}
+                    className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                  >
+                    <option value="All">All</option>
+                    <option value="Won">Won</option>
+                    <option value="Lost">Lost</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Void">Void</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+          </Card>
+
+          <BetTable bets={filteredBets} />
         </div>
       </section>
 
