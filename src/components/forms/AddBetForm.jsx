@@ -11,46 +11,7 @@ import {
   parseFractionalOdds,
   parseEwTerm,
 } from '../../data/bets'
-
-const buildDefaultSelections = () => [
-  {
-    id: crypto?.randomUUID ? crypto.randomUUID() : `sel-${Date.now()}-1`,
-    event: '',
-    market: '',
-    selection: '',
-    odds: '2/1',
-  },
-  {
-    id: crypto?.randomUUID ? crypto.randomUUID() : `sel-${Date.now()}-2`,
-    event: '',
-    market: '',
-    selection: '',
-    odds: '3/1',
-  },
-]
-
-const defaultForm = {
-  date: new Date().toISOString().split('T')[0],
-  sport: 'Football',
-  event: '',
-  market: '',
-  selection: '',
-  bookmaker: '',
-  stake: '25',
-  betType: 'single',
-  odds: '2/1',
-  result: 'Pending',
-  notes: '',
-  winStake: '10',
-  placeStake: '10',
-  ewTerms: '1/4',
-  placesPaid: '3',
-  finishingPosition: '1',
-  cashOutAmount: '0',
-  selections: buildDefaultSelections(),
-}
-
-function AddBetForm({ onSubmit }) {
+ronSubmit }) {
   const [formData, setFormData] = useState(defaultForm)
   const [errors, setErrors] = useState({})
 
@@ -495,3 +456,125 @@ function AddBetForm({ onSubmit }) {
               <div className="flex items-center justify-between gap-3">
                 <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
                   Selections ({(formData.selections || []).length} 
+                  </h3>
+                <Button type="button" variant="secondary" size="sm" onClick={addAccumulatorSelection}>Add selection</Button>
+              </div>
+
+              {(formData.selections || []).map((selection, index) => (
+                <div key={selection.id} className="grid gap-3 rounded-2xl border border-[var(--border)] bg-[var(--panel-muted)] p-3 md:grid-cols-[1.2fr_1.1fr_1fr_0.9fr_auto]">
+                  <input
+                    aria-label={`Accumulator event ${index + 1}`}
+                    value={selection.event}
+                    onChange={(event) => handleAccumulatorSelectionChange(index, 'event', event.target.value)}
+                    placeholder="Event"
+                    className="rounded-xl border border-[var(--border)] bg-[var(--panel)] px-3 py-2.5 text-[var(--text)] outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                  />
+                  <input
+                    aria-label={`Accumulator market ${index + 1}`}
+                    value={selection.market}
+                    onChange={(event) => handleAccumulatorSelectionChange(index, 'market', event.target.value)}
+                    placeholder="Market"
+                    className="rounded-xl border border-[var(--border)] bg-[var(--panel)] px-3 py-2.5 text-[var(--text)] outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                  />
+                  <input
+                    aria-label={`Accumulator selection ${index + 1}`}
+                    value={selection.selection}
+                    onChange={(event) => handleAccumulatorSelectionChange(index, 'selection', event.target.value)}
+                    placeholder="Selection"
+                    className="rounded-xl border border-[var(--border)] bg-[var(--panel)] px-3 py-2.5 text-[var(--text)] outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                  />
+                  <input
+                    aria-label={`Accumulator odds ${index + 1}`}
+                    value={selection.odds}
+                    onChange={(event) => handleAccumulatorSelectionChange(index, 'odds', event.target.value)}
+                    placeholder="6/4"
+                    className="rounded-xl border border-[var(--border)] bg-[var(--panel)] px-3 py-2.5 text-[var(--text)] outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                  />
+                  <Button type="button" variant="secondary" size="sm" onClick={() => removeAccumulatorSelection(index)} disabled={(formData.selections || []).length <= 2}>Remove</Button>
+                </div>
+              ))}
+
+              {errors.selections ? <span className="text-xs text-rose-600">{errors.selections}</span> : null}
+              <div className="rounded-xl border border-[var(--border)] bg-[var(--panel-muted)] p-3 text-sm text-[var(--muted)]">
+                Combined odds: <span className="font-semibold text-[var(--text)]">{normalizeFractionalOdds(accumulatorOdds)}</span>
+              </div>
+            </div>
+          ) : null}
+
+          <label className="flex flex-col gap-1.5 text-sm font-medium text-[var(--text)] md:col-span-2">
+            Result
+            <select
+              aria-label="Bet result"
+              name="result"
+              value={formData.result}
+              onChange={handleChange}
+              className="rounded-xl border border-[var(--border)] bg-[var(--panel)] px-3 py-2.5 text-[var(--text)] outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+            >
+              <option value="Won">Won</option>
+              <option value="Lost">Lost</option>
+              <option value="Void">Void</option>
+              <option value="Pending">Pending</option>
+              <option value="Cashed Out">Cashed Out</option>
+            </select>
+          </label>
+
+          {formData.result === 'Cashed Out' ? (
+            <label className="flex flex-col gap-1.5 text-sm font-medium text-[var(--text)] md:col-span-2">
+              Cash Out Amount (£)
+              <input
+                aria-label="Cash out amount"
+                type="number"
+                name="cashOutAmount"
+                min="0"
+                step="0.01"
+                value={formData.cashOutAmount}
+                onChange={handleChange}
+                className="rounded-xl border border-[var(--border)] bg-[var(--panel)] px-3 py-2.5 text-[var(--text)] outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+              />
+              {errors.cashOutAmount ? <span className="text-xs text-rose-600">{errors.cashOutAmount}</span> : null}
+            </label>
+          ) : null}
+        </div>
+
+        <div className="rounded-2xl border border-[var(--border)] bg-[var(--panel-muted)] p-3 text-sm text-[var(--muted)]">
+          {getRequiredSelectionCount(formData.betType) > 1 ? (
+            <>
+              Combined odds: <span className="font-semibold text-[var(--text)]">{normalizeFractionalOdds(accumulatorOdds)}</span> •
+              Returns: <span className="font-semibold text-[var(--text)]">£{(Number(formData.stake || 0) * accumulatorOdds).toFixed(2)}</span> •
+              Profit: <span className="font-semibold text-[var(--text)]">£{(Number(formData.stake || 0) * accumulatorOdds - Number(formData.stake || 0)).toFixed(2)}</span>
+            </>
+          ) : formData.betType === 'each_way' ? (
+            <>
+              Preview: returns <span className="font-semibold text-[var(--text)]">£{eachWayPreview.returns.toFixed(2)}</span> • profit <span className="font-semibold text-[var(--text)]">£{eachWayPreview.profit.toFixed(2)}</span>
+            </>
+          ) : (
+            <>
+              Preview: returns <span className="font-semibold text-[var(--text)]">£{(Number(formData.stake || 0) * (Number(parseFractionalOdds(formData.odds) || 1))).toFixed(2)}</span> • profit <span className="font-semibold text-[var(--text)]">£{(Number(formData.stake || 0) * (Number(parseFractionalOdds(formData.odds) || 1)) - Number(formData.stake || 0)).toFixed(2)}</span>
+            </>
+          )}
+        </div>
+
+        <label className="flex flex-col gap-1.5 text-sm font-medium text-[var(--text)]">
+          Notes
+          <textarea
+            aria-label="Notes"
+            name="notes"
+            value={formData.notes}
+            onChange={handleChange}
+            rows="3"
+            placeholder="Add any useful context about the selection"
+            className="rounded-xl border border-[var(--border)] bg-[var(--panel)] px-3 py-2.5 text-[var(--text)] outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+          />
+        </label>
+
+        <div className="flex justify-end">
+          <Button type="submit" className="shadow-lg shadow-indigo-500/20 transition hover:-translate-y-0.5">
+            Save Bet
+          </Button>
+        </div>
+      </form>
+    </Card>
+  )
+}
+
+export default AddBetForm
