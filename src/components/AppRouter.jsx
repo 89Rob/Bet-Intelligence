@@ -76,8 +76,25 @@ function AppRouter({ theme, toggleTheme }) {
     <BrowserRouter>
       <KeyboardShortcuts />
       
-      <Routes>
-  <Route path="*" element={<h1>Bet Intelligence is working!</h1>} />
+<Routes>
+  <Route
+    path="/"
+    element={
+      <DashboardLayout
+        theme={theme}
+        toggleTheme={toggleTheme}
+      />
+    }
+  >
+    <Route index element={<HomePage />} />
+    <Route path="bets" element={<BetsPage />} />
+    <Route path="analytics" element={<AnalyticsPage />} />
+    <Route path="settings" element={<SettingsPage />} />
+  </Route>
+
+  <Route path="/help" element={<HelpPage />} />
+
+  <Route path="*" element={<Navigate to="/" replace />} />
 </Routes>
     
     </BrowserRouter>
