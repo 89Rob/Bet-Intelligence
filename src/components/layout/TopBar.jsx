@@ -1,8 +1,9 @@
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Button from '../ui/Button'
 
 function TopBar({ theme, toggleTheme, onToggleMenu }) {
   const location = useLocation()
+  const navigate = useNavigate()
 
   const titleMap = {
     '/': 'Dashboard',
@@ -10,6 +11,7 @@ function TopBar({ theme, toggleTheme, onToggleMenu }) {
     '/bets': 'Bets',
     '/analytics': 'Analytics',
     '/settings': 'Settings',
+    '/help': 'Help',
   }
 
   const currentTitle = titleMap[location.pathname] || 'Dashboard'
@@ -44,7 +46,9 @@ function TopBar({ theme, toggleTheme, onToggleMenu }) {
             <span aria-hidden="true">{theme === 'light' ? '🌙' : '☀️'}</span>
             {theme === 'light' ? 'Dark mode' : 'Light mode'}
           </button>
-          <Button size="sm">New View</Button>
+          <Button type="button" size="sm" variant="secondary" onClick={() => navigate('/help')}>
+            Help
+          </Button>
         </div>
       </div>
     </header>

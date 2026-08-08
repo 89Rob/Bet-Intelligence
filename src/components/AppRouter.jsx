@@ -68,6 +68,9 @@ function KeyboardShortcuts() {
   return null
 }
 
+import BetsPage from './pages/BetsPage'
+import AnalyticsPage from './pages/AnalyticsPage'
+
 function AppRouter({ theme, toggleTheme }) {
   return (
     <BrowserRouter>
@@ -76,8 +79,8 @@ function AppRouter({ theme, toggleTheme }) {
         <Route element={<DashboardLayout theme={theme} toggleTheme={toggleTheme} />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/dashboard" element={<HomePage />} />
-          <Route path="/bets" element={<HomePage />} />
-          <Route path="/analytics" element={<HomePage />} />
+          <Route path="/bets" element={<BetsPage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/help" element={<HelpPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
