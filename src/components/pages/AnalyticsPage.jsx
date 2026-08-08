@@ -38,7 +38,11 @@ function AnalyticsPage() {
     }
 
     window.addEventListener('storage', sync)
-    return () => window.removeEventListener('storage', sync)
+    window.addEventListener('bet-data-updated', sync)
+    return () => {
+      window.removeEventListener('storage', sync)
+      window.removeEventListener('bet-data-updated', sync)
+    }
   }, [])
 
   return (

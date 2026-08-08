@@ -45,7 +45,11 @@ function HomePage() {
 
     const syncBets = () => setBets(getStoredBets())
     window.addEventListener('storage', syncBets)
-    return () => window.removeEventListener('storage', syncBets)
+    window.addEventListener('bet-data-updated', syncBets)
+    return () => {
+      window.removeEventListener('storage', syncBets)
+      window.removeEventListener('bet-data-updated', syncBets)
+    }
   }, [])
 
   const totalStaked = calculateTotalStaked(bets)

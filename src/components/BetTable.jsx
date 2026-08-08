@@ -1,5 +1,6 @@
 import Badge from './ui/Badge'
 import Card from './ui/Card'
+import { formatFractionalOdds } from '../data/bets'
 
 const resultVariants = {
   Won: 'success',
@@ -9,7 +10,7 @@ const resultVariants = {
 }
 
 const formatCurrency = (value) => `£${Number(value).toFixed(2)}`
-const formatOdds = (value) => Number(value).toFixed(2)
+const formatOdds = (value) => formatFractionalOdds(value)
 
 function BetTable({ bets }) {
   if (!bets.length) {

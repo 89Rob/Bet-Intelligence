@@ -4,7 +4,13 @@ import Card from '../ui/Card'
 import PageHeader from '../ui/PageHeader'
 import BetTable from '../BetTable'
 import AddBetForm from '../forms/AddBetForm'
-import { calculateBetProfit, mockBets } from '../../data/bets'
+import {
+  calculateBetProfit,
+  formatFractionalOdds,
+  mockBets,
+  normalizeFractionalOdds,
+  parseFractionalOdds,
+} from '../../data/bets'
 import {
   calculateAverageOdds,
   calculateAverageStake,
@@ -26,6 +32,18 @@ function normalizeBet(rawBet) {
     return null
   }
 
+  const originalFractionalOdds = typeof rawBet.fractionalOdds === 'string'
+    ? rawBet.fractionalOdds
+    : typeof rawBet.odds === 'string'
+      ? rawBet.odds
+      : null
+
+  const oddsSource = originalFractionalOdds ?? rawBet.decimalOdds ?? rawBet.odds ?? '1/1'
+  const fractionalOdds = normalizeFractionalOdds(oddsSource)
+  const parsedDecimalOdds = Number(rawBet.decimalOdds ?? parseFractionalOdds(fractionalOdds) ?? Number(rawBet.odds) ?? 1)
+  const decimalOdds = Number.isFinite(parsedDecimalOdds) && parsedDecimalOdds > 0 ? parsedDecimalOdds : 1
+  const stake = Number(rawBet.stake) || 0
+
   const normalized = {
     id: String(rawBet.id || `BET-${Date.now()}-${Math.random().toString(16).slice(2)}`),
     date: rawBet.date || new Date().toISOString().split('T')[0],
@@ -34,11 +52,41 @@ function normalizeBet(rawBet) {
     market: String(rawBet.market || '').trim(),
     selection: String(rawBet.selection || '').trim(),
     bookmaker: String(rawBet.bookmaker || '').trim(),
-    stake: Number(rawBet.stake) || 0,
-    odds: Number(rawBet.odds) || 1,
+    stake,
+    betType: rawBet.betType || 'single',
+    odds: fractionalOdds,
+    fractionalOdds,
+    decimalOdds,
+    returns: Number(rawBet.returns ?? (stake * decimalOdds).toFixed(2)),
     result: rawBet.result || 'Pending',
-    profit: Number(rawBet.profit ?? calculateBetProfit(rawBet)),
+    status: rawBet.status || rawBet.result || 'Pending',
+    profit: Number(rawBet.profit ?? calculateBetProfit({
+      ...rawBet,
+      stake,
+      odds: fractionalOdds,
+      decimalOdds,
+      betType: rawBet.betType || 'single',
+      selections: Array.isArray(rawBet.selections) ? rawBet.selections : [],
+      winStake: Number(rawBet.winStake || 0),
+      placeStake: Number(rawBet.placeStake || 0),
+      ewTerms: rawBet.ewTerms || '1/4',
+      placesPaid: Number(rawBet.placesPaid || 0),
+      finishingPosition: Number(rawBet.finishingPosition || 0),
+      cashOutAmount: Number(rawBet.cashOutAmount || 0),
+    })),
     notes: String(rawBet.notes || '').trim(),
+    cashOutAmount: Number(rawBet.cashOutAmount || 0),
+    selections: Array.isArray(rawBet.selections) ? rawBet.selections.map((selection) => ({
+      ...selection,
+      odds: normalizeFractionalOdds(selection.odds || '1/1'),
+      decimalOdds: Number(parseFractionalOdds(selection.odds || '1/1') || 1),
+    })) : [],
+    winStake: Number(rawBet.winStake || 0),
+    placeStake: Number(rawBet.placeStake || 0),
+    ewTerms: rawBet.ewTerms || '1/4',
+    placesPaid: Number(rawBet.placesPaid || 0),
+    finishingPosition: Number(rawBet.finishingPosition || 0),
+    metadata: rawBet.metadata || {},
   }
 
   if (!normalized.event || !normalized.market || !normalized.selection || !normalized.bookmaker) {
@@ -168,9 +216,11 @@ function BetsPage() {
     const betToAdd = {
       ...newBet,
       profit: calculateBetProfit(newBet),
+      returns: Number(newBet.returns ?? calculateBetProfit(newBet) + Number(newBet.stake || 0)),
     }
 
     setBets((currentBets) => [betToAdd, ...currentBets])
+    window.dispatchEvent(new CustomEvent('bet-data-updated'))
     showNotification('success', 'Bet saved successfully.')
   }
 
@@ -494,8 +544,8 @@ function BetsPage() {
         </Card>
         <Card className="p-5">
           <p className="text-sm text-[var(--muted)]">Average odds</p>
-          <p className="mt-3 text-2xl font-semibold text-[var(--text)]">{averageOdds.toFixed(2)}</p>
-          <p className="mt-1 text-xs text-[var(--muted)]">Decimal</p>
+          <p className="mt-3 text-2xl font-semibold text-[var(--text)]">{formatFractionalOdds(averageOdds)}</p>
+          <p className="mt-1 text-xs text-[var(--muted)]">Fractional</p>
         </Card>
         <Card className="p-5">
           <p className="text-sm text-[var(--muted)]">Best sport</p>

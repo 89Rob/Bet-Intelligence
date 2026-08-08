@@ -27,7 +27,7 @@ export function calculateAverageOdds(bets) {
     return 0
   }
 
-  const totalOdds = bets.reduce((sum, bet) => sum + Number(bet.odds || 0), 0)
+  const totalOdds = bets.reduce((sum, bet) => sum + Number(bet.decimalOdds ?? bet.odds ?? 0), 0)
   return totalOdds / bets.length
 }
 
