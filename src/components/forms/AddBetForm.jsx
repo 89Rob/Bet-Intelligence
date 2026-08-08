@@ -11,7 +11,7 @@ import {
   parseFractionalOdds,
   parseEwTerm,
 } from '../../data/bets'
-ronSubmit }) {
+const AddBetForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState(defaultForm)
   const [errors, setErrors] = useState({})
 
