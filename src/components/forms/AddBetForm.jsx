@@ -11,6 +11,43 @@ import {
   parseFractionalOdds,
   parseEwTerm,
 } from '../../data/bets'
+
+const defaultForm = {
+  betType: 'single',
+  date: new Date().toISOString().split('T')[0],
+  sport: 'Football',
+  event: '',
+  market: '',
+  selection: '',
+  bookmaker: '',
+  stake: '',
+  odds: '2/1',
+  result: 'Pending',
+  notes: '',
+  cashOutAmount: '',
+  winStake: '',
+  placeStake: '',
+  ewTerms: '1/4',
+  placesPaid: 3,
+  finishingPosition: 1,
+  selections: [
+    {
+      id: 'sel-1',
+      event: '',
+      market: '',
+      selection: '',
+      odds: '2/1',
+    },
+    {
+      id: 'sel-2',
+      event: '',
+      market: '',
+      selection: '',
+      odds: '2/1',
+    },
+  ],
+}
+
 const AddBetForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState(defaultForm)
   const [errors, setErrors] = useState({})
