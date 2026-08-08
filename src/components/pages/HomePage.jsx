@@ -359,9 +359,7 @@ function HomePage() {
         <StatCard label="Tracked Bets" value={String(filteredBets.length)} change="Visible" tone="neutral" />
       </section>
 
-      <section className="mb-8">
-        <ProfessionalAnalytics bets={filteredBets} />
-      </section>
+   
 
       <section className="mb-8 grid gap-4 xl:grid-cols-2">
         <Card className="p-5">
