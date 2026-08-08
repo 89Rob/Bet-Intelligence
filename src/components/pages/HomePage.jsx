@@ -3,7 +3,6 @@ import Button from '../ui/Button'
 import Card from '../ui/Card'
 import PageHeader from '../ui/PageHeader'
 import StatCard from '../ui/StatCard'
-import DashboardLayout from '../layout/DashboardLayout'
 import BetTable from '../BetTable'
 import AddBetForm from '../forms/AddBetForm'
 import { calculateBetProfit, mockBets } from '../../data/bets'
@@ -323,7 +322,7 @@ function HomePage() {
   }
 
   return (
-    <DashboardLayout>
+    <>
       <PageHeader
         eyebrow="Operations"
         title="Welcome back"
@@ -538,7 +537,7 @@ function HomePage() {
           </div>
         </Card>
       </section>
-    </DashboardLayout>
+    </>
   )
 }
 
