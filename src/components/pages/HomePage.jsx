@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import Card from '../ui/Card'
 import PageHeader from '../ui/PageHeader'
-import {
+import StatCard from '../ui/StatCard'
   calculateAverageStake,
   calculateRoi,
   calculateSportPerformance,
