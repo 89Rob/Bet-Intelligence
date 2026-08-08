@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
 import Card from '../ui/Card'
 import PageHeader from '../ui/PageHeader'
-import StatCard from '../ui/StatCard'
-import { mockBets } from '../../data/bets'
 import {
   calculateAverageStake,
   calculateRoi,
@@ -18,20 +16,20 @@ const BETS_STORAGE_KEY = 'bet-intelligence-bets'
 
 function getStoredBets() {
   if (typeof window === 'undefined') {
-    return mockBets
+    return []
   }
 
   try {
     const savedBets = localStorage.getItem(BETS_STORAGE_KEY)
     if (!savedBets) {
-      return mockBets
+      return []
     }
 
     const parsed = JSON.parse(savedBets)
-    return Array.isArray(parsed) ? parsed : mockBets
+    return Array.isArray(parsed) ? parsed : []
   } catch (error) {
     console.error('Failed to load dashboard bets:', error)
-    return mockBets
+    return []
   }
 }
 
@@ -71,17 +69,17 @@ function HomePage() {
       />
 
       <section className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Total Staked" value="£0.00" change="All bets" tone="indigo" />
-        <StatCard label="Total Profit" value="£0.00" change="Net" tone="warning" />
-        <StatCard label="ROI" value="0%" change="Profit / stake" tone="success" />
-        <StatCard label="Average Stake" value="£0.00" change="Per bet" tone="neutral" />
+        <StatCard label="Total Staked" value={`£${totalStaked.toFixed(2)}`} change="All bets" tone="indigo" />
+        <StatCard label="Total Profit" value={`£${totalProfit.toFixed(2)}`} change="Net" tone="warning" />
+        <StatCard label="ROI" value={`${roi.toFixed(0)}%`} change="Profit / stake" tone="success" />
+        <StatCard label="Average Stake" value={`£${averageStake.toFixed(2)}`} change="Per bet" tone="neutral" />
       </section>
 
       <section className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Win Rate" value={`${winRate.toFixed(1)}%`} change="Settled" tone="success" />
+        <StatCard label="Win Rate" value={`${winRate.toFixed(0)}%`} change="Settled" tone="success" />
         <StatCard label="Winning Bets" value={String(winningBets)} change="Won" tone="success" />
         <StatCard label="Losing Bets" value={String(losingBets)} change="Lost" tone="warning" />
-        <StatCard label="Best Sport" value={bestSport || 'N/A'} change="Highest profit" tone="indigo" />
+        <StatCard label="Best Sport" value={bestSport || 'No data'} change="Highest profit" tone="indigo" />
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[1.4fr_1fr]">
@@ -132,7 +130,7 @@ function HomePage() {
 
           {recentBets.length === 0 ? (
             <div className="rounded-xl border border-dashed border-[var(--border)] bg-[var(--panel-muted)] p-4 text-sm text-[var(--muted)]">
-              No recent bets available yet.
+              No recent bets.
             </div>
           ) : (
             <div className="space-y-3">

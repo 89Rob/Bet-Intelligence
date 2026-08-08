@@ -492,4 +492,3 @@ export function calculateBetProfit({ stake, odds, result, decimalOdds, betType, 
   return calculateSingleBetResult({ stake: safeStake, decimalOdds: safeDecimalOdds, result, cashOutAmount }).profit
 }
 
-export const mockBets = []

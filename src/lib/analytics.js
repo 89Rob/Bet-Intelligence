@@ -216,9 +216,9 @@ export function calculatePerformanceInsights(bets) {
   const insights = []
 
   if (totalProfit >= 0) {
-    insights.push(`Your filtered sample is up £${totalProfit.toFixed(2)} overall.`)
+    insights.push(`Your filtered results are up £${totalProfit.toFixed(2)} overall.`)
   } else {
-    insights.push(`Your filtered sample is down £${Math.abs(totalProfit).toFixed(2)} overall.`)
+    insights.push(`Your filtered results are down £${Math.abs(totalProfit).toFixed(2)} overall.`)
   }
 
   insights.push(`ROI sits at ${calculateRoi(totalProfit, totalStaked).toFixed(1)}% across £${totalStaked.toFixed(2)} staked.`)

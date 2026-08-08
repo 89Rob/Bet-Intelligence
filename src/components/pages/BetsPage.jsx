@@ -7,7 +7,6 @@ import AddBetForm from '../forms/AddBetForm'
 import {
   calculateBetProfit,
   formatFractionalOdds,
-  mockBets,
   normalizeFractionalOdds,
   parseFractionalOdds,
 } from '../../data/bets'
@@ -98,25 +97,25 @@ function normalizeBet(rawBet) {
 
 function getStoredBets() {
   if (typeof window === 'undefined') {
-    return mockBets
+    return []
   }
 
   try {
     const savedBets = localStorage.getItem(BETS_STORAGE_KEY)
     if (!savedBets) {
-      return mockBets
+      return []
     }
 
     const parsed = JSON.parse(savedBets)
     if (!Array.isArray(parsed)) {
-      return mockBets
+      return []
     }
 
     const normalized = parsed.map(normalizeBet).filter(Boolean)
-    return normalized.length > 0 ? normalized : mockBets
+    return normalized.length > 0 ? normalized : []
   } catch (error) {
     console.error('Failed to load saved bets:', error)
-    return mockBets
+    return []
   }
 }
 
@@ -477,7 +476,19 @@ function BetsPage() {
 
           {filteredBets.length === 0 ? (
             <Card className="p-8 text-center">
-              <p className="text-lg font-semibold text-[var(--text)]">No bets yet. Add your first bet.</p>
+              <p className="text-lg font-semibold text-[var(--text)]">No bets added yet.</p>
+              <Button
+                type="button"
+                className="mt-4"
+                onClick={() => {
+                  const addBetForm = document.getElementById('add-bet-form')
+                  if (addBetForm) {
+                    addBetForm.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                  }
+                }}
+              >
+                Add your first bet
+              </Button>
             </Card>
           ) : (
             <>
