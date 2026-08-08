@@ -329,23 +329,23 @@ function BetsPage() {
       <section className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <Card className="p-5">
           <p className="text-sm text-[var(--muted)]">Staked</p>
-          <p className="mt-3 text-2xl font-semibold text-[var(--text)]">£{totalStaked.toFixed(2)}</p>
-          <p className="mt-1 text-xs text-[var(--muted)]">Across {filteredBets.length} visible bets</p>
+          <p className="mt-3 text-2xl font-semibold text-[var(--text)]">£0.00</p>
+          <p className="mt-1 text-xs text-[var(--muted)]">Across 0 visible bets</p>
         </Card>
         <Card className="p-5">
           <p className="text-sm text-[var(--muted)]">Profit</p>
-          <p className="mt-3 text-2xl font-semibold text-[var(--text)]">£{totalProfit.toFixed(2)}</p>
+          <p className="mt-3 text-2xl font-semibold text-[var(--text)]">£0.00</p>
           <p className="mt-1 text-xs text-[var(--muted)]">Net result</p>
         </Card>
         <Card className="p-5">
           <p className="text-sm text-[var(--muted)]">ROI</p>
-          <p className="mt-3 text-2xl font-semibold text-[var(--text)]">{roi.toFixed(1)}%</p>
+          <p className="mt-3 text-2xl font-semibold text-[var(--text)]">0%</p>
           <p className="mt-1 text-xs text-[var(--muted)]">Profit / stake</p>
         </Card>
         <Card className="p-5">
           <p className="text-sm text-[var(--muted)]">Win rate</p>
-          <p className="mt-3 text-2xl font-semibold text-[var(--text)]">{winRate.toFixed(1)}%</p>
-          <p className="mt-1 text-xs text-[var(--muted)]">{winningBets} wins / {losingBets} losses</p>
+          <p className="mt-3 text-2xl font-semibold text-[var(--text)]">0%</p>
+          <p className="mt-1 text-xs text-[var(--muted)]">0 wins / 0 losses</p>
         </Card>
       </section>
 
@@ -421,60 +421,68 @@ function BetsPage() {
               <p className="text-sm text-[var(--muted)]">Search and filter the full ledger.</p>
             </div>
             <span className="rounded-full bg-indigo-100 px-2.5 py-1 text-xs font-medium text-indigo-700">
-              {filteredBets.length} bets
+              0 bets
             </span>
           </div>
 
-          <Card className="mb-4 p-4">
-            <div className="space-y-4">
-              <label className="block text-sm font-medium text-[var(--text)]">
-                Search
-                <input
-                  id="bet-search"
-                  type="text"
-                  value={searchTerm}
-                  onChange={(event) => setSearchTerm(event.target.value)}
-                  placeholder="Search event, selection, bookmaker or market"
-                  aria-label="Search bets"
-                  className="mt-1 w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-[var(--text)] outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
-                />
-              </label>
+          {filteredBets.length === 0 ? (
+            <Card className="p-8 text-center">
+              <p className="text-lg font-semibold text-[var(--text)]">No bets yet. Add your first bet.</p>
+            </Card>
+          ) : (
+            <>
+              <Card className="mb-4 p-4">
+                <div className="space-y-4">
+                  <label className="block text-sm font-medium text-[var(--text)]">
+                    Search
+                    <input
+                      id="bet-search"
+                      type="text"
+                      value={searchTerm}
+                      onChange={(event) => setSearchTerm(event.target.value)}
+                      placeholder="Search event, selection, bookmaker or market"
+                      aria-label="Search bets"
+                      className="mt-1 w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-[var(--text)] outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                    />
+                  </label>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <label className="block text-sm font-medium text-[var(--text)]">
-                  Sport
-                  <select
-                    value={sportFilter}
-                    onChange={(event) => setSportFilter(event.target.value)}
-                    className="mt-1 w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-[var(--text)] outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
-                  >
-                    {sports.map((sport) => (
-                      <option key={sport} value={sport}>
-                        {sport}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <label className="block text-sm font-medium text-[var(--text)]">
+                      Sport
+                      <select
+                        value={sportFilter}
+                        onChange={(event) => setSportFilter(event.target.value)}
+                        className="mt-1 w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-[var(--text)] outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                      >
+                        {sports.map((sport) => (
+                          <option key={sport} value={sport}>
+                            {sport}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
 
-                <label className="block text-sm font-medium text-[var(--text)]">
-                  Result
-                  <select
-                    value={resultFilter}
-                    onChange={(event) => setResultFilter(event.target.value)}
-                    className="mt-1 w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-[var(--text)] outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
-                  >
-                    <option value="All">All</option>
-                    <option value="Won">Won</option>
-                    <option value="Lost">Lost</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Void">Void</option>
-                  </select>
-                </label>
-              </div>
-            </div>
-          </Card>
+                    <label className="block text-sm font-medium text-[var(--text)]">
+                      Result
+                      <select
+                        value={resultFilter}
+                        onChange={(event) => setResultFilter(event.target.value)}
+                        className="mt-1 w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-[var(--text)] outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                      >
+                        <option value="All">All</option>
+                        <option value="Won">Won</option>
+                        <option value="Lost">Lost</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Void">Void</option>
+                      </select>
+                    </label>
+                  </div>
+                </div>
+              </Card>
 
-          <BetTable bets={filteredBets} />
+              <BetTable bets={filteredBets} />
+            </>
+          )}
         </div>
       </section>
 

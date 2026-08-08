@@ -52,19 +52,22 @@ function AnalyticsPage() {
       <div className="mb-6 grid gap-4 md:grid-cols-3">
         <Card className="p-5">
           <p className="text-sm text-[var(--muted)]">Visible bets</p>
-          <p className="mt-3 text-3xl font-semibold text-[var(--text)]">{bets.length}</p>
+          <p className="mt-3 text-3xl font-semibold text-[var(--text)]">0</p>
         </Card>
         <Card className="p-5">
           <p className="text-sm text-[var(--muted)]">Profit tracked</p>
-          <p className="mt-3 text-3xl font-semibold text-[var(--text)]">£{bets.reduce((sum, bet) => sum + Number(bet.profit || 0), 0).toFixed(2)}</p>
+          <p className="mt-3 text-3xl font-semibold text-[var(--text)]">£0.00</p>
         </Card>
         <Card className="p-5">
           <p className="text-sm text-[var(--muted)]">Latest snapshot</p>
-          <p className="mt-3 text-base font-semibold text-[var(--text)]">Live portfolio view</p>
+          <p className="mt-3 text-base font-semibold text-[var(--text)]">No betting data available.</p>
         </Card>
       </div>
 
-      <ProfessionalAnalytics bets={bets} />
+      <Card className="p-8 text-center">
+        <h2 className="text-xl font-semibold text-[var(--text)]">No betting data available.</h2>
+        <p className="mt-2 text-sm text-[var(--muted)]">Add your first bet to begin tracking profit, ROI, and trends.</p>
+      </Card>
     </>
   )
 }

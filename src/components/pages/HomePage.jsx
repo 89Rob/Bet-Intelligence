@@ -67,10 +67,10 @@ function HomePage() {
       />
 
       <section className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Total Staked" value={`£${totalStaked.toFixed(2)}`} change="All bets" tone="indigo" />
-        <StatCard label="Total Profit" value={`£${totalProfit.toFixed(2)}`} change="Net" tone="warning" />
-        <StatCard label="ROI" value={`${roi.toFixed(1)}%`} change="Profit / stake" tone="success" />
-        <StatCard label="Average Stake" value={`£${averageStake.toFixed(2)}`} change="Per bet" tone="neutral" />
+        <StatCard label="Total Staked" value="£0.00" change="All bets" tone="indigo" />
+        <StatCard label="Total Profit" value="£0.00" change="Net" tone="warning" />
+        <StatCard label="ROI" value="0%" change="Profit / stake" tone="success" />
+        <StatCard label="Average Stake" value="£0.00" change="Per bet" tone="neutral" />
       </section>
 
       <section className="mb-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
